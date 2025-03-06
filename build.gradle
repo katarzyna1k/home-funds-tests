@@ -1,0 +1,72 @@
+plugins {
+    id 'java'
+}
+
+group = 'pl.kris87M'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit dependency management with BOM
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
+
+    // JUnit Platform Suite API for running Cucumber tests
+    testImplementation 'org.junit.platform:junit-platform-suite-api:1.10.0'
+
+    implementation 'org.jetbrains:annotations:24.0.0'
+
+    // Selenium WebDriver
+    implementation 'org.seleniumhq.selenium:selenium-java:4.27.0'
+
+    // WebDriverManager for managing browser drivers
+    implementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
+
+    // AssertJ for assertions
+    testImplementation "org.assertj:assertj-core:3.24.2"
+
+    // Cucumber dependencies
+    testImplementation 'io.cucumber:cucumber-java:7.20.1'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.20.1'
+}
+
+task testAllBrowsers(type: Test) {
+    group = 'verification'
+    doNotTrackState('All browsers test should always run')
+    dependsOn(['testChrome', 'testEdge', 'testFirefox'])
+}
+
+task testChrome(type: Test) {
+    group = 'verification'
+    doNotTrackState('Chrome browser test should always run')
+    useJUnitPlatform()
+    systemProperty 'selenium.browser', 'chrome'
+}
+
+task testFirefox(type: Test) {
+    group = 'verification'
+    doNotTrackState('Firefox browser test should always run')
+    useJUnitPlatform()
+    systemProperty 'selenium.browser', 'firefox'
+}
+
+task testEdge(type: Test) {
+    group = 'verification'
+    doNotTrackState('Edge browser test should always run')
+    useJUnitPlatform()
+    systemProperty 'selenium.browser', 'edge'
+}
+
+tasks.register('cucumber', Test) {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed", "standard_out", "standard_error"
+        showStandardStreams = true
+    }
+}
+
+
