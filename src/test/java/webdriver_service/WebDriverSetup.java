@@ -10,6 +10,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import utils.AppManager;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -22,23 +23,23 @@ public abstract class WebDriverSetup {
     protected static final String BROWSER_CHROME = "chrome";
     protected static final String BROWSER_FIREFOX = "firefox";
     protected static final String BROWSER_EDGE = "edge";
-    protected static WebDriver driver;
+    protected static ThreadLocal<WebDriver> threadDriver = new ThreadLocal<>();
 
-    public static void setUpDriver() throws InterruptedException {
-        if (!isAppRunning()) {
-            startApp();
+    public static WebDriver getDriver() {
+        if (threadDriver.get() == null) {
+            if (!isAppRunning()) {
+                AppManager.startApp();
+            }
+            String browser = System.getProperty(SELECTED_BROWSER_SYSTEM_PROPERTY, BROWSER_CHROME);
+            threadDriver.set(createWebDriver(browser));
         }
-        String browser = System.getProperty(SELECTED_BROWSER_SYSTEM_PROPERTY, BROWSER_CHROME);
-        if (driver == null) {
-            driver = createWebDriver(browser);
-        }
+        return threadDriver.get();
     }
 
     protected static WebDriver createWebDriver(String type) {
         if (StringUtils.isBlank(type)) {
             throw new IllegalArgumentException("Browser type must be specified and cannot be null or empty");
         }
-
         return switch (type) {
             case BROWSER_FIREFOX -> createFirefoxDriver();
             case BROWSER_CHROME -> createChromeDriver();
@@ -78,30 +79,10 @@ public abstract class WebDriverSetup {
         }
     }
 
-    private static void startApp() throws InterruptedException {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", "npm run start");
-            processBuilder.directory(new java.io.File("../home-funds"));
-            processBuilder.start();
-            Thread.sleep(10000);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to start the app", e);
+    public static void quitDriver() {
+        if (threadDriver.get() != null) {
+            threadDriver.get().quit();
+            threadDriver.remove();
         }
-    }
-
-    private static void stopApp() {
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c", "taskkill /F /IM node.exe");
-            processBuilder.start();
-        } catch (Exception e) {
-            System.out.println("Failed to stop the app" + e.getMessage());
-        }
-    }
-
-    public static void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-        stopApp();
     }
 }

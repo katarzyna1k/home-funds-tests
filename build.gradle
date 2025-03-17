@@ -10,28 +10,24 @@ repositories {
 }
 
 dependencies {
-    // JUnit dependency management with BOM
-    testImplementation platform('org.junit:junit-bom:5.10.0')
+
+    testImplementation(platform("org.junit:junit-bom:5.12.1"))
+    testImplementation(platform("io.cucumber:cucumber-bom:7.21.1"))
+    testImplementation(platform("org.assertj:assertj-bom:3.27.3"))
+
+    testImplementation("io.cucumber:cucumber-java")
+    testImplementation("io.cucumber:cucumber-junit-platform-engine")
+    testImplementation("org.junit.platform:junit-platform-suite")
+    testImplementation("org.assertj:assertj-core")
+
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
-
-    // JUnit Platform Suite API for running Cucumber tests
-    testImplementation 'org.junit.platform:junit-platform-suite-api:1.10.0'
-
     implementation 'org.jetbrains:annotations:24.0.0'
 
-    // Selenium WebDriver
     implementation 'org.seleniumhq.selenium:selenium-java:4.27.0'
 
-    // WebDriverManager for managing browser drivers
     implementation 'io.github.bonigarcia:webdrivermanager:5.9.2'
-
-    // AssertJ for assertions
-    testImplementation "org.assertj:assertj-core:3.24.2"
-
-    // Cucumber dependencies
-    testImplementation 'io.cucumber:cucumber-java:7.20.1'
-    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.20.1'
 }
 
 task testAllBrowsers(type: Test) {
@@ -61,12 +57,14 @@ task testEdge(type: Test) {
     systemProperty 'selenium.browser', 'edge'
 }
 
-tasks.register('cucumber', Test) {
-    useJUnitPlatform()
+task cucumber(type: Test) {
+    useJUnitPlatform()  // Tells Gradle to use JUnit Platform for running the tests
     testLogging {
-        events "passed", "skipped", "failed", "standard_out", "standard_error"
-        showStandardStreams = true
+        events "passed", "skipped", "failed"
     }
+    // Set any necessary system properties, for example, specifying which browser to use
+    //systemProperty 'selenium.browser', 'chrome'
+    // Other properties or configurations can be added as needed
 }
 
 
