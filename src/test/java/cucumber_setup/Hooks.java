@@ -1,5 +1,6 @@
 package cucumber_setup;
 
+import configuration.ConfigurationManager;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
 import org.junit.jupiter.api.AfterAll;
@@ -17,8 +18,9 @@ public class Hooks {
     }
 
     @Before
-    public void setUpDriver() {
+    public void setUp() {
         driver = WebDriverSetup.getDriver();
+        driver.navigate().to(ConfigurationManager.getUrl());
     }
 
     @After

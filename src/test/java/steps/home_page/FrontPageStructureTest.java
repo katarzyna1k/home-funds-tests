@@ -1,4 +1,4 @@
-package home_page;
+package steps.home_page;
 
 import configuration.ConfigurationManager;
 import cotext.ScenarioContext;
@@ -13,6 +13,7 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FrontPageStructureTest {
@@ -26,7 +27,8 @@ public class FrontPageStructureTest {
 
     @Given("the user opens the front page")
     public void the_user_opens_the_front_page() {
-        driver.navigate().to(ConfigurationManager.getUrl());
+        String url = driver.getCurrentUrl();
+        assertThat(url).contains(ConfigurationManager.getUrl());
     }
 
     @When("user checks the functions panel on the left side")
