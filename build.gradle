@@ -58,13 +58,10 @@ task testEdge(type: Test) {
 }
 
 task cucumber(type: Test) {
-    useJUnitPlatform()  // Tells Gradle to use JUnit Platform for running the tests
+    useJUnitPlatform()
     testLogging {
         events "passed", "skipped", "failed"
     }
-    // Set any necessary system properties, for example, specifying which browser to use
-    //systemProperty 'selenium.browser', 'chrome'
-    // Other properties or configurations can be added as needed
 }
 
 

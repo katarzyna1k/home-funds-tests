@@ -1,4 +1,4 @@
-package home_page;
+package steps.home_page;
 
 import configuration.ConfigurationManager;
 import cucumber_setup.Hooks;
@@ -22,7 +22,8 @@ public class HomePageTest {
 
     @Given("the user navigates to front page of the application")
     public void the_user_navigates_to_front_page_of_the_application() {
-        driver.navigate().to(ConfigurationManager.getUrl());
+        String url = driver.getCurrentUrl();
+        assertThat(url).contains(ConfigurationManager.getUrl());
     }
 
     @Then("the front page should be displayed correctly")
