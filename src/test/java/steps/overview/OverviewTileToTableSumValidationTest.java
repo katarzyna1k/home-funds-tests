@@ -23,7 +23,7 @@ public class OverviewTileToTableSumValidationTest {
     private ScenarioContext scenarioContext;
     private final String OVERVIEW_ENDPOINT_SELECTOR = "//a[text()='Przegląd']";
     private final String TILE_SELECTOR = "div.ant-card-body";
-    private final String BUTTON_SELECTOR = "button[type='button']";
+    private final String DETAILS_BUTTON_SELECTOR = "button[type='button']";
     private final String SUBPAGE_SELECTOR = "//h1[text()='";
     public WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     private final String TABLE_SELECTOR = "//table";
@@ -36,8 +36,8 @@ public class OverviewTileToTableSumValidationTest {
 
     @Given("feature overview page is loaded")
     public void feature_overview_page_is_loaded() {
-        driver.findElement(By.xpath(OVERVIEW_ENDPOINT_SELECTOR)).click();
-        WebElement result = driver.findElement(By.xpath("//h1[text()='Przegląd']"));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath(OVERVIEW_ENDPOINT_SELECTOR))).click();
+        WebElement result = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//h1[text()='Przegląd']")));
         String resultText = result.getText();
         assertAll(
                 () -> assertThat(driver.getCurrentUrl()).contains("/overview"),
@@ -56,7 +56,7 @@ public class OverviewTileToTableSumValidationTest {
 
     @When("click on the details button {int}")
     public void click_on_the_details_button(Integer index) {
-        List<WebElement> button = driver.findElements(By.cssSelector(BUTTON_SELECTOR));
+        List<WebElement> button = driver.findElements(By.cssSelector(DETAILS_BUTTON_SELECTOR));
         button.get(index).click();
     }
 
@@ -112,7 +112,7 @@ public class OverviewTileToTableSumValidationTest {
         double expectedBalance = income - sum;
         String formattedExpectedBalance = decimalFormat.format(expectedBalance);
 
-        double actualBalanceValue = Double.parseDouble(tileSumNumbers.getLast());
+        double actualBalanceValue = Double.parseDouble(tileSumNumbers.get(3));
         String formattedActualBalance = decimalFormat.format(actualBalanceValue);
 
         assertEquals(formattedExpectedBalance, formattedActualBalance);

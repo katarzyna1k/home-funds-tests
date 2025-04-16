@@ -14,4 +14,3 @@ Feature: Validate tile summary matches table data
       | "Przychody"       | 0     | "Kwota" |
       | "Stałe wydatki"   | 1     | "Kwota" |
       | "Bieżące wydatki" | 2     | "Kwota" |
-      | "Bilans"          | 3     | "Kwota" |
