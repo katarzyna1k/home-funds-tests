@@ -8,8 +8,9 @@ Feature: Front Page Structure
 
       | feature           | order |
       | "Przegląd"        | 0     |
-      | "Bieżące wydatki" | 1     |
-      | "Bilans"          | 2     |
-      | "Przychody"       | 3     |
-      | "Stałe wydatki"   | 4     |
-      | "Skarbonka"       | 5     |
+      | "Przychody"       | 1     |
+      | "Stałe wydatki"   | 2     |
+      | "Bieżące wydatki" | 3     |
+      | "Skarbonka"       | 4     |
+      | "Bilans"          | 5     |
+      | "Kalendarz"       | 6     |
