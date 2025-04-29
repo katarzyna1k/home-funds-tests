@@ -6,11 +6,13 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import pom.SidebarPanelPom;
+import utils.TablePages;
 
 import java.time.Duration;
 import java.util.List;
@@ -23,12 +25,14 @@ public class DismissPopupAndTableUnchangedTest {
     private WebDriver driver = Hooks.getDriver();
     private ScenarioContext scenarioContext;
     public WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(5));
-    private final String LOGO_SELECTOR="div.Sidebar_logo__v4crW";
-    private final String TABLE_SELECTOR = "//div[@class='ant-table-content']//tbody";
+    private final String LOGO_SELECTOR = "div.Sidebar_logo__v4crW";
+    private final String TABLE_SELECTOR = "//div[@class='ant-table-content']//tbody//tr";
     private final String ADD_BUTTON_SELECTOR = "//span[text()='Dodaj']";
     private final String DISMISS_BUTTON_SELECTOR = "//span[text()='Anuluj']";
     private final String POPUP_SELECTOR = "div.ant-modal-content";
+    private By pagination = By.xpath("//ul[contains(@class,'ant-pagination')]//a");
     private SidebarPanelPom sidebarPanelPom = new SidebarPanelPom(driver);
+    private TablePages tablePages = new TablePages(driver);
 
 
     public DismissPopupAndTableUnchangedTest() {
@@ -52,7 +56,7 @@ public class DismissPopupAndTableUnchangedTest {
 
     @When("the user note the initial data in the table")
     public void the_user_note_the_initial_data_in_the_table() {
-        List<WebElement> tableRows = driver.findElements(By.xpath(TABLE_SELECTOR + "//tr"));
+        int tableRows = tablePages.countAllRows(pagination, TABLE_SELECTOR);
         scenarioContext.set("tableRows", tableRows);
     }
 
@@ -80,6 +84,7 @@ public class DismissPopupAndTableUnchangedTest {
             }
             WebElement inputField = driver.findElement(By.id(fieldName));
             inputField.sendKeys(value);
+            inputField.sendKeys(Keys.TAB);
         }
     }
 
@@ -97,8 +102,8 @@ public class DismissPopupAndTableUnchangedTest {
 
     @Then("the table should remain unchanged")
     public void the_table_should_remain_unchanged() {
-        List<WebElement> actualTable = driver.findElements(By.xpath(TABLE_SELECTOR + "//tr"));
-        List<WebElement> expectedTable = scenarioContext.get("tableRows", List.class);
-        assertEquals(expectedTable.size(), actualTable.size());
+        int actualTable = tablePages.countAllRows(pagination, TABLE_SELECTOR);
+        int expectedTable = scenarioContext.get("tableRows", Integer.class);
+        assertEquals(expectedTable, actualTable);
     }
 }

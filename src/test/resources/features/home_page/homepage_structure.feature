@@ -11,6 +11,6 @@ Feature: Front Page Structure
       | "Przychody"       | 1     |
       | "Stałe wydatki"   | 2     |
       | "Bieżące wydatki" | 3     |
-      | "Skarbonka"       | 4     |
-      | "Bilans"          | 5     |
+      | "Bilans"          | 4     |
+      | "Skarbonka"       | 5     |
       | "Kalendarz"       | 6     |
